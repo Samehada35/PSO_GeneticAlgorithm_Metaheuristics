@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.input.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane id="ap" prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.Controller">
+   <top>
+      <MenuBar prefHeight="32.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Fichier">
+            <items>
+                  <MenuItem id="menu-item-voir-clauses" mnemonicParsing="false" onAction="#showClauses" text="Voir Clauses">
+                     <accelerator>
+                        <KeyCodeCombination alt="ANY" code="C" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem id="menu-item-nouv-fich" mnemonicParsing="false" onAction="#openFile" text="Importer un fichier cnf">
+                     <accelerator>
+                        <KeyCodeCombination alt="ANY" code="I" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+              <MenuItem id="menu-item-quitter" mnemonicParsing="false" onAction="#close" text="Quitter">
+                     <accelerator>
+                        <KeyCodeCombination alt="ANY" code="Q" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Méthodes">
+            <items>
+                  <Menu mnemonicParsing="false" text="Méthodes aveugles">
+                    <items>
+                      <MenuItem id="menu-item-rech-largeur" mnemonicParsing="false" onAction="#searchBFS" text="Recherche en largeur">
+                           <accelerator>
+                              <KeyCodeCombination alt="ANY" code="L" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem id="menu-item-rech-profondeur" mnemonicParsing="false" onAction="#searchDFS" text="Recherche en profondeur">
+                           <accelerator>
+                              <KeyCodeCombination alt="ANY" code="R" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Méthodes heuristiques">
+                    <items>
+                        <MenuItem id="menu-item-rech-astar" mnemonicParsing="false" onAction="#searchAStar" text="Algorithme A*">
+                           <accelerator>
+                              <KeyCodeCombination alt="ANY" code="A" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Métaheuristiques">
+                    <items>
+                      <MenuItem id="menu-item-rech-ga" mnemonicParsing="false" onAction="#searchGA" text="Algorithme Genetique">
+                           <accelerator>
+                              <KeyCodeCombination alt="ANY" code="B" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem id="menu-item-rech-pso" mnemonicParsing="false" text="PSO">
+                           <accelerator>
+                              <KeyCodeCombination alt="ANY" code="P" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                    </items>
+                  </Menu>
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Statistiques">
+              <items>
+                <MenuItem id="menu-item-nb-etats" mnemonicParsing="false" onAction="#showNumberStatesDevelopped" text="Nombre d'états développés">
+                     <accelerator>
+                        <KeyCodeCombination alt="ANY" code="N" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem id="menu-item-moyenne-etats" mnemonicParsing="false" onAction="#showAvegargeStatesDevelopped" text="Moyenne nombre états développés">
+                     <accelerator>
+                        <KeyCodeCombination alt="ANY" code="M" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem id="menu-item-temps-exec" mnemonicParsing="false" onAction="#showExecutionTime" text="Temps d'exécution">
+                     <accelerator>
+                        <KeyCodeCombination alt="ANY" code="T" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+              </items>
+            </Menu>
+          <Menu mnemonicParsing="false" text="Aide">
+            <items>
+              <MenuItem id="menu-item-apropos" mnemonicParsing="false" onAction="#showInfos" text="A propos">
+                     <accelerator>
+                        <KeyCodeCombination alt="ANY" code="H" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <bottom>
+      <HBox maxHeight="30.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Text id="loading-infos-display" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-text" text="-" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+            </HBox>
+            <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-text" text="Nombre de clauses :" />
+                  <Text id="clauses-number-display" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-text" text="0" />
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </HBox>
+            <HBox prefHeight="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-text" text="Longueur des clauses :" />
+                  <Text id="clauses-length-display" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-text" text="0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-text" text="Nombre de variables :" />
+                  <Text id="variables-number-display" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-text" text="0" />
+               </children>
+            </HBox>
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </HBox>
+   </bottom>
+   <center>
+      <TabPane id="main-tab-pane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+            <Tab closable="false" text="Accueil">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="443.0" minWidth="10.0" prefWidth="379.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="643.0" minWidth="10.0" prefWidth="480.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="564.0" minWidth="10.0" prefWidth="373.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="310.0" minHeight="10.0" prefHeight="222.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="352.0" minHeight="10.0" prefHeight="169.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="big-title" text="Projet Intelligence en essaim" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                              <ImageView fitHeight="240.0" fitWidth="515.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                 <image>
+                                    <Image url="@../images/logo.png" />
+                                 </image>
+                              </ImageView>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="Pour commencer, veuillez sélectionner des données à partir du menu Fichier-&gt;Importer un fichier cnf" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                 <GridPane.margin>
+                                    <Insets left="50.0" />
+                                 </GridPane.margin>
+                              </Text>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+          <Tab closable="false" text="Liste Clauses">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <top>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Liste des clauses" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets bottom="30.0" />
+                                 </BorderPane.margin>
+                              </Text>
+                           </top>
+                           <center>
+                              <ScrollPane maxWidth="1.7976931348623157E308" prefHeight="577.0" prefViewportHeight="19.951171875" prefWidth="1250.0" BorderPane.alignment="CENTER">
+                                 <content>
+                                    <Text id="clauses-list-display" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" BorderPane.alignment="CENTER" />
+                                 </content>
+                                 <padding>
+                                    <Insets left="15.0" />
+                                 </padding>
+                              </ScrollPane>
+                           </center>
+                        </BorderPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab closable="false" text="Attente">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <top>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Recherche en cours... Veuillez patienter" BorderPane.alignment="CENTER" />
+                           </top>
+                           <center>
+                              <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <image>
+                                    <Image url="@../images/loading.gif" />
+                                 </image>
+                              </ImageView>
+                           </center>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </BorderPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Résultats">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <BorderPane minHeight="400.0" prefHeight="497.0" prefWidth="1280.0" AnchorPane.bottomAnchor="158.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <top>
+                              <Text id="execution-results-title" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Résultats d'exécution de l'algorithme :" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets bottom="20.0" />
+                                 </BorderPane.margin></Text>
+                           </top>
+                           <center>
+                              <GridPane hgap="10.0" minWidth="1280.0" prefHeight="300.0" prefWidth="1280.0" vgap="5.0" BorderPane.alignment="CENTER">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="167.0" minWidth="10.0" prefWidth="101.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="728.0" minWidth="10.0" prefWidth="594.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="737.0" minWidth="10.0" prefWidth="307.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="604.0" minWidth="10.0" prefWidth="242.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="182.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="300.0" minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="Algorithme" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="Solution" GridPane.columnIndex="1" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="Nombre de noeuds développés" GridPane.columnIndex="2" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="Temps d'exécution" GridPane.columnIndex="3" />
+                                    <Text id="algorithm-choice-result" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="-" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                                    <ScrollPane hvalue="30.0" maxHeight="222.0" maxWidth="733.0" prefHeight="222.0" prefViewportHeight="19.951171875" prefViewportWidth="5.99853515625" prefWidth="733.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <content>
+                                          <Text id="solution-result" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                       </content>
+                                    </ScrollPane>
+                                    <Text id="nb-nodes-developped-result" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="-" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                                    <Text id="execution-time-result" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="-" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                                 </children>
+                                 <BorderPane.margin>
+                                    <Insets left="20.0" right="20.0" />
+                                 </BorderPane.margin>
+                              </GridPane>
+                           </center>
+                           <padding>
+                              <Insets left="20.0" right="20.0" top="10.0" />
+                           </padding>
+                        </BorderPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Nombre états">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <top>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Comparatif du nombre d'états développés" BorderPane.alignment="CENTER" />
+                           </top>
+                           <center>
+                              <LineChart id="states-number-chart" maxHeight="500.0" maxWidth="1200.0" prefHeight="500.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+                                <xAxis>
+                                  <CategoryAxis id="states-number-xAxis" label="Instances" prefHeight="65.0" prefWidth="639.0" side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis label="Nomre états developpés" side="LEFT" />
+                                </yAxis>
+                              </LineChart>
+                           </center>
+                        </BorderPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Moyenne états">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <top>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Comparatif de la moyenne des états développés" BorderPane.alignment="CENTER" />
+                           </top>
+                           <center>
+                              <BarChart id="states-average-chart" barGap="0.0" categoryGap="0.0" maxHeight="500.0" maxWidth="1200.0" prefHeight="500.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+                                <xAxis>
+                                  <CategoryAxis id="states-average-xAxis" label="Algorithme" prefHeight="65.0" prefWidth="488.0" side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis label="Moyenne états développés" side="LEFT" />
+                                </yAxis>
+                              </BarChart>
+                           </center>
+                        </BorderPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Temps exécution">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <top>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Comparatif du temps d'exécution" BorderPane.alignment="CENTER" />
+                           </top>
+                           <center>
+                              <LineChart id="exec-time-chart" maxHeight="500.0" maxWidth="1200.0" prefHeight="500.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+                                <xAxis>
+                                  <CategoryAxis id="exec-time-xAxis" label="Instances" prefHeight="65.0" prefWidth="639.0" side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis label="Temps exécution (s)" side="LEFT" />
+                                </yAxis>
+                              </LineChart>
+                           </center>
+                        </BorderPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Résultats Genetique">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <BorderPane minHeight="400.0" prefHeight="497.0" prefWidth="1280.0" AnchorPane.bottomAnchor="158.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <top>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Résultats d'exécution de l'algorithme" BorderPane.alignment="CENTER" />
+                           </top>
+                           <center>
+                              <GridPane BorderPane.alignment="CENTER">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.0" minWidth="0.0" prefWidth="158.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="792.0" minWidth="10.0" prefWidth="254.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="903.0" minWidth="10.0" prefWidth="631.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="544.0" minWidth="10.0" prefWidth="241.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="Algorithme" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="Paramètres" GridPane.columnIndex="1" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="Solution" GridPane.columnIndex="2" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="Temps d'exécution" GridPane.columnIndex="3" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="Génétique" GridPane.rowIndex="1" />
+                                    <Text id="parameters-ga" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Text id="execution-time-result-ga" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="-" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                       <content>
+                                          <Text id="solution-result-ga" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simple-text" text="-" />
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                                 <BorderPane.margin>
+                                    <Insets left="20.0" right="20.0" />
+                                 </BorderPane.margin>
+                              </GridPane>
+                           </center>
+                           <padding>
+                              <Insets left="20.0" right="20.0" top="10.0" />
+                           </padding>
+                        </BorderPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+</BorderPane>

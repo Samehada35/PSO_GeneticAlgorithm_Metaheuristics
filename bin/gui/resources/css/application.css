@@ -1,0 +1,27 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+ 
+.tab-pane .tab-header-area {
+    visibility: hidden ;
+    -fx-pref-height : 0px;
+}
+
+.title{
+	-fx-font-size : 26px;
+	-fx-font-weight : bold;
+}
+
+.status-text{
+	-fx-font-style : italic;
+	-fx-font-size : 18px;
+}
+
+.simple-text{
+	-fx-font-size : 20px;
+}
+
+.big-title{
+	-fx-font-style : italic;
+	-fx-font-weight : bold;
+	-fx-font-size : 40px;
+	-fx-color : #0a0a1c;	
+}

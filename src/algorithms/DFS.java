@@ -1,0 +1,108 @@
+package algorithms;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
+import data.Measure;
+import data.Method;
+import data.Statistics;
+import utils.SearchingUtils;
+
+public class DFS {
+	private Stack<ArrayList<Integer>> open;
+	private SAT sat;
+	private int developpedNodesNumber;
+	private double executionTime;
+	
+	public DFS(SAT sat) {
+		this.sat = sat;
+		this.open = new Stack<>();
+	}
+
+	
+	public int[] run() {
+		ArrayList<Integer> literalNodes = new ArrayList<>();
+		ArrayList<Integer> positiveLiteralNode;
+		ArrayList<Integer> negativeLiteralNode;
+		ArrayList<Integer> unpickedLiterals;
+		int randLiteral;
+		developpedNodesNumber = 0;
+		executionTime = System.currentTimeMillis();
+		
+		
+		open.push(literalNodes);
+		
+		while(!open.isEmpty()) {
+			literalNodes = open.pop();
+			this.developpedNodesNumber++;
+			
+			
+			if(literalNodes.size() == sat.getVariablesNumber()) {
+				if(sat.is_satisfiable(SearchingUtils.getSolutionArray(literalNodes))) {
+					executionTime = (System.currentTimeMillis() - executionTime)/1000;
+					
+					Measure m = new Measure(sat.getInstanceSource(),executionTime,developpedNodesNumber,sat.getClausesNumber(),Method.DFS);
+					
+					Statistics s = Statistics.getStats();
+					s.addMeasure(m);
+					
+					return SearchingUtils.getSolutionArray(literalNodes);
+				}
+			}else {
+				positiveLiteralNode = new ArrayList<>(literalNodes);
+				negativeLiteralNode = new ArrayList<>(literalNodes);
+				
+				unpickedLiterals = new ArrayList<>();
+				
+				for(int i=1;i<=sat.getVariablesNumber();i++) {
+					if(!literalNodes.contains(i) && !literalNodes.contains(i*-1)) {
+						unpickedLiterals.add(i);
+					}
+				}
+				
+				randLiteral = unpickedLiterals.get((int) Math.floor(Math.random()*unpickedLiterals.size()));
+				
+				positiveLiteralNode.add(randLiteral);
+				negativeLiteralNode.add(randLiteral*-1);
+				
+				int pushOrder = (int) Math.floor(Math.random()*2);
+				
+				if(pushOrder == 0) {
+					open.push(negativeLiteralNode);
+					open.push(positiveLiteralNode);
+				}else {
+					open.push(positiveLiteralNode);
+					open.push(negativeLiteralNode);
+				}
+			}
+			
+		}
+		
+		executionTime = (System.currentTimeMillis() - executionTime)/1000;
+		
+		Measure m = new Measure(sat.getInstanceSource(),executionTime,developpedNodesNumber,0,Method.DFS);
+		
+		Statistics s = Statistics.getStats();
+		s.addMeasure(m);
+		
+		return null;
+		
+	}
+	
+
+
+	public int getDeveloppedNodesNumber() {
+		return developpedNodesNumber;
+	}
+
+	public double getExecutionTime() {
+		return executionTime;
+	}
+
+
+	
+	
+
+}
